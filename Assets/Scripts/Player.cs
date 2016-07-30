@@ -35,12 +35,13 @@ public class Player : MonoBehaviour
     {
         if (Math.Abs(x) < Tolerance && Math.Abs(y) < Tolerance)
         {
+            _moveDirection = Vector3.zero;
             return;
         }
 
-        _moveDirection = new Vector3(x, y);
+        _moveDirection = new Vector3(x, y) * MovementSpeed;
 
-        transform.Translate(_moveDirection * MovementSpeed * Time.deltaTime, Space.World);
+        transform.Translate(_moveDirection * Time.deltaTime, Space.World);
 
         var angle = Mathf.Atan2(_moveDirection.x, _moveDirection.y) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle, Vector3.back), RotationSpeed);
@@ -53,24 +54,30 @@ public class Player : MonoBehaviour
             return;
         }
 
-        var ball = _ballObject.GetComponent<Ball>();
-        if (ball != null)
-        {
-            ball.Shoot(_moveDirection, KickSpeed);
-            _hasBall = false;
-            _ballObject = null;
-        }
+        _ballObject.GetComponent<Rigidbody2D>().velocity = transform.up * (KickSpeed + _moveDirection.magnitude);
+        _ballObject.GetComponent<Collider2D>().enabled = true;
+        _ballObject.transform.parent = null;
+        _ballObject = null;
+
+        _hasBall = false;
     }
 
-    private void OnTriggerEnter2D(Collider2D col)
+    private void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.tag.Equals("Ball"))
+        if (col.gameObject.tag.Equals("Ball"))
         {
             _hasBall = true;
             _ballObject = col.gameObject;
             _ballObject.transform.parent = transform;
-        }    
-        else if (col.tag.Equals("Portal"))
+            _ballObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            _ballObject.GetComponent<Collider2D>().enabled = false;
+            _ballObject.transform.localPosition = new Vector3(0, 1.5f);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D col)
+    {  
+        if (col.tag.Equals("Portal"))
         {
             var portal = col.gameObject.GetComponent<Portal>();
             if (!portal.Delay)

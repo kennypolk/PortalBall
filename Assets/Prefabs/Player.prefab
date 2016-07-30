@@ -25,7 +25,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 493580}
   - 114: {fileID: 11468912}
-  - 61: {fileID: 6135300}
+  - 60: {fileID: 6008328}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -53,15 +53,15 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 138320}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -14.08, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 406490}
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!61 &6135300
-BoxCollider2D:
+--- !u!60 &6008328
+PolygonCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -72,8 +72,15 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Size: {x: 2, y: 2}
+  m_Points:
+    m_Paths:
+    - - {x: -2.2463741, y: 1.2602553}
+      - {x: -1.1730452, y: 1.2438638}
+      - {x: 0.024847984, y: -0.1614129}
+      - {x: 1.0995235, y: 1.2546265}
+      - {x: 2.1894674, y: 1.2696539}
+      - {x: -0.01406002, y: -1.341418}
+      - {x: -0.55306435, y: -0.7164254}
 --- !u!114 &11468912
 MonoBehaviour:
   m_ObjectHideFlags: 1

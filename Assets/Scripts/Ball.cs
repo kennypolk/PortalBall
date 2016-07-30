@@ -16,19 +16,4 @@ public class Ball : MonoBehaviour
 	{
 	
 	}
-
-    private void OnTriggerEnter2D(Collider2D col)
-    {
-        if (col.tag.Equals("Player"))
-        {
-            _rigidBody2D.velocity = Vector2.zero;
-        }
-    }
-
-    public void Shoot(Vector3 moveDirection, float speed)
-    {
-        transform.parent = null;
-
-        _rigidBody2D.AddForce(moveDirection.normalized * speed, ForceMode2D.Impulse);
-    }
 }

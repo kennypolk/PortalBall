@@ -3,17 +3,12 @@ using System.Collections;
 
 public class Ball : MonoBehaviour
 {
-    private Rigidbody2D _rigidBody2D;
+    public Rigidbody2D Rigidbody2D { get; set; }
+    public Collider2D Collider2D { get; set; }
 
-	// Use this for initialization
-	void Start () 
-	{
-        _rigidBody2D = GetComponent<Rigidbody2D>();
+    private void Start ()
+    {
+        Rigidbody2D = this.GetComponentSafe<Rigidbody2D>();
+        Collider2D = this.GetComponentSafe<Collider2D>();
     }
-	
-	// Update is called once per frame
-	void Update () 
-	{
-	
-	}
 }

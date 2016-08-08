@@ -41,23 +41,12 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.CompareTag("Ball") && !_hasBall)
-        {
-            _ball = col.gameObject.GetComponent<Ball>();
-            _ball.Rigidbody2D.isKinematic = true;
-            _ball.Rigidbody2D.velocity = Vector2.zero;
-            _ball.transform.parent = transform;
-            _ball.transform.position = BallPosition.position;
-            
-        }
+        Debug.Log(string.Format("Player collision enter with {0}", col.gameObject.tag));
     }
 
     private void OnCollisionExit2D(Collision2D col)
     {
-        if (col.gameObject.CompareTag("Ball"))
-        {
-            _hasBall = false;
-        }
+        Debug.Log(string.Format("Player collision exit with {0}", col.gameObject.tag));
     }
 
     private void OnTriggerEnter2D(Collider2D col)
@@ -71,6 +60,13 @@ public class Player : MonoBehaviour
                 portal.Delay = true;
             }
         }
+        else if (col.CompareTag("Ball"))
+        {
+            Debug.Log("Ball trigger enter");
+            _ball = col.GetComponentInParent<Ball>();
+            _ball.PlayerCollision(BallPosition);
+            _hasBall = true;
+        }
     }
 
     private void OnTriggerExit2D(Collider2D col)
@@ -78,6 +74,11 @@ public class Player : MonoBehaviour
         if (col.CompareTag("Portal"))
         {
             col.gameObject.GetComponent<Portal>().Delay = false;
+        }
+        else if (col.CompareTag("Ball"))
+        {
+            Debug.Log("Ball trigger exit");
+            _hasBall = false;
         }
     }
 
@@ -106,17 +107,18 @@ public class Player : MonoBehaviour
 
         if (Input.GetButtonDown("Fire2"))
         {
+            Debug.Log("Fire2 pressed");
             _currentShootForce = ShootMinForce;
         }
         else if (Input.GetButtonUp("Fire2"))
         {
-            _ball.Rigidbody2D.velocity = transform.up*_currentShootForce;
-            _ball.Rigidbody2D.isKinematic = false;
-            _ball.transform.parent = null;
+            Debug.Log(string.Format("Shoot ball with force {0}", _currentShootForce));
+            _ball.Shoot(_currentShootForce);
             _ball = null;
         }
         else if (Input.GetButton("Fire2"))
         {
+            Debug.Log(string.Format("Charging shot with force {0}", _currentShootForce));
             var tempForce = _currentShootForce + _shootChargeSpeed*Time.deltaTime;
             if (tempForce < ShootMaxForce)
             {

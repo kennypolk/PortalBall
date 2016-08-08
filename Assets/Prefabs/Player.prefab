@@ -9,7 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 406490}
   - 212: {fileID: 21245310}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,8 +25,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 493580}
   - 114: {fileID: 11468912}
-  - 60: {fileID: 6008328}
-  m_Layer: 0
+  - 60: {fileID: 60000011232847368}
+  m_Layer: 8
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -39,13 +39,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 108716}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
   m_Children: []
   m_Father: {fileID: 493580}
-  m_RootOrder: 0
+  m_RootOrder: 1
 --- !u!4 &493580
 Transform:
   m_ObjectHideFlags: 1
@@ -57,30 +57,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
+  - {fileID: 4000014165473396}
   - {fileID: 406490}
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!60 &6008328
-PolygonCollider2D:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 138320}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_Offset: {x: 0, y: 0}
-  m_Points:
-    m_Paths:
-    - - {x: -2.2463741, y: 1.2602553}
-      - {x: -1.1730452, y: 1.2438638}
-      - {x: 0.024847984, y: -0.1614129}
-      - {x: 1.0995235, y: 1.2546265}
-      - {x: 2.1894674, y: 1.2696539}
-      - {x: -0.01406002, y: -1.341418}
-      - {x: -0.55306435, y: -0.7164254}
 --- !u!114 &11468912
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -92,9 +72,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ffd8de655f8ab94688c1382c6b6ec79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MovementSpeed: 20
-  RotationSpeed: 0.25
-  KickSpeed: 20
+  MoveSpeed: 20
+  TurnSpeed: 0.25
+  SprintSpeed: 40
+  SprintStamina: 1
+  ShootMinForce: 5
+  ShootMaxForce: 50
+  ShootChargeTime: 0.75
+  BallPosition: {fileID: 4000014165473396}
 --- !u!212 &21245310
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -104,17 +89,20 @@ SpriteRenderer:
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_SelectedWireframeHidden: 1
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -136,3 +124,48 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 138320}
   m_IsPrefabParent: 1
+--- !u!1 &1000014038764496
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 4000014165473396}
+  m_Layer: 8
+  m_Name: Ball Position
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4000014165473396
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000014038764496}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 493580}
+  m_RootOrder: 0
+--- !u!60 &60000011232847368
+PolygonCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 138320}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  m_Points:
+    m_Paths:
+    - - {x: 0.02395153, y: 1.263462}
+      - {x: 2.2204638, y: -1.2238507}
+      - {x: -2.0767574, y: -1.2478015}

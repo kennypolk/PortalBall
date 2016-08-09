@@ -545,18 +545,14 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 148594, guid: b182417069fa0ce4a9faa7d1cb1745fc, type: 2}
-      propertyPath: m_Name
-      value: PortalA
-      objectReference: {fileID: 0}
     - target: {fileID: 11440042, guid: b182417069fa0ce4a9faa7d1cb1745fc, type: 2}
       propertyPath: LinkedPortal
       value: 
       objectReference: {fileID: 1904691171}
-    - target: {fileID: 2327800, guid: b182417069fa0ce4a9faa7d1cb1745fc, type: 2}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 7f53052199aba5b4189a948d639572a6, type: 2}
+    - target: {fileID: 148594, guid: b182417069fa0ce4a9faa7d1cb1745fc, type: 2}
+      propertyPath: m_Name
+      value: PortalA
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b182417069fa0ce4a9faa7d1cb1745fc, type: 2}
   m_IsPrefabParent: 0

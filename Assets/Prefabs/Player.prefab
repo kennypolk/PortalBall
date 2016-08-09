@@ -9,7 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 406490}
   - 212: {fileID: 21245310}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26,7 +26,7 @@ GameObject:
   - 4: {fileID: 493580}
   - 114: {fileID: 11468912}
   - 60: {fileID: 60000011232847368}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -132,7 +132,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000014165473396}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Ball Position
   m_TagString: Untagged
   m_Icon: {fileID: 0}

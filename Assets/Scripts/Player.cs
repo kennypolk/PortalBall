@@ -62,7 +62,6 @@ public class Player : MonoBehaviour
         }
         else if (col.CompareTag("Ball"))
         {
-            Debug.Log("Ball trigger enter");
             _ball = col.GetComponentInParent<Ball>();
             _ball.PlayerCollision(BallPosition);
             _hasBall = true;
@@ -77,8 +76,8 @@ public class Player : MonoBehaviour
         }
         else if (col.CompareTag("Ball"))
         {
-            Debug.Log("Ball trigger exit");
             _hasBall = false;
+            _ball = null;
         }
     }
 
@@ -86,11 +85,21 @@ public class Player : MonoBehaviour
     {
         if (Math.Abs(_inputX) < 0.1f && Math.Abs(_inputY) < 0.1f)
         {
+            _currentMoveSpeed = 0f;
             return;
         }
 
-        var movement = new Vector3(_inputX, _inputY) * MoveSpeed * Time.deltaTime;
+        var movement = new Vector2(_inputX, _inputY);
+        if (movement.magnitude > 1)
+        {
+            movement = movement.normalized;
+        }
+
+        movement *= MoveSpeed;
+
         _currentMoveSpeed = movement.magnitude;
+
+        movement *= Time.deltaTime;
 
         transform.Translate(movement, Space.World);
         
@@ -107,23 +116,17 @@ public class Player : MonoBehaviour
 
         if (Input.GetButtonDown("Fire2"))
         {
-            Debug.Log("Fire2 pressed");
             _currentShootForce = ShootMinForce;
         }
         else if (Input.GetButtonUp("Fire2"))
         {
-            Debug.Log(string.Format("Shoot ball with force {0}", _currentShootForce));
-            _ball.Shoot(_currentShootForce);
-            _ball = null;
+            Debug.Log(string.Format("Current Force: {0} CurrentSpeed: {1}", _currentShootForce, _currentMoveSpeed));
+            _ball.Shoot(_currentShootForce + _currentMoveSpeed, transform.up);
         }
         else if (Input.GetButton("Fire2"))
         {
-            Debug.Log(string.Format("Charging shot with force {0}", _currentShootForce));
-            var tempForce = _currentShootForce + _shootChargeSpeed*Time.deltaTime;
-            if (tempForce < ShootMaxForce)
-            {
-                _currentShootForce = tempForce;
-            }
+            var tempForce = _currentShootForce + _shootChargeSpeed * Time.deltaTime;
+            _currentShootForce = tempForce < ShootMaxForce ? tempForce : ShootMaxForce;
         }
     }
 }

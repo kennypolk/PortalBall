@@ -13,10 +13,10 @@ public class Ball : MonoBehaviour
         transform.localPosition = ballPosition.localPosition;
     }
 
-    public void Shoot(float force)
+    public void Shoot(float force, Vector3 direction)
     {
         _rigidbody2D.isKinematic = false;
-        _rigidbody2D.velocity = transform.up * force;
+        _rigidbody2D.velocity = direction * force;
         transform.parent = null;
     }
 

@@ -1,83 +1,57 @@
 ﻿using System;
 using UnityEngine;
-using System.Collections;
 
 public class Player : MonoBehaviour
 {
-    private const float Tolerance = 0.001f;
+    public float MoveSpeed = 20f;
+    public float TurnSpeed = 0.25f;
+    public float SprintSpeed = 40f;
+    public float SprintStamina = 1f;
+    public float ShootMinForce = 5f;
+    public float ShootMaxForce = 50f;
+    public float ShootChargeTime = 0.75f;
+    public Transform BallPosition;
 
+    private float _inputX;
+    private float _inputY;
+    private float _currentMoveSpeed;
+    private float _currentSprintStamina;
+    private float _shootChargeSpeed;
+    private float _currentShootForce;
+    private Ball _ball;
     private bool _hasBall;
-    private GameObject _ballObject;
-    private Vector3 _moveDirection;
 
-    public float MovementSpeed = 6f;
-    public float RotationSpeed = 1f;
-    public float KickSpeed = 6f;
-
-	// Use this for initialization
-	private void Start () 
-	{
-	
-	}
-	
-	// Update is called once per frame
-	private void Update ()
-	{
-        Movement(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-
-	    if (Input.GetButton("Fire2"))
-	    {
-            ShootBall();
-        }
-	}
-
-    private void Movement(float x, float y)
+    private void Start ()
     {
-        if (Math.Abs(x) < Tolerance && Math.Abs(y) < Tolerance)
-        {
-            _moveDirection = Vector3.zero;
-            return;
-        }
+        _shootChargeSpeed = (ShootMaxForce - ShootMinForce)/ShootChargeTime;
+    }
+    
+    private void Update ()
+    {
+        _inputX = Input.GetAxis("Horizontal");
+        _inputY = Input.GetAxis("Vertical");
 
-        _moveDirection = new Vector3(x, y) * MovementSpeed;
-
-        transform.Translate(_moveDirection * Time.deltaTime, Space.World);
-
-        var angle = Mathf.Atan2(_moveDirection.x, _moveDirection.y) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle, Vector3.back), RotationSpeed);
+        ShootBall();
     }
 
-    private void ShootBall()
+    private void FixedUpdate()
     {
-        if (!_hasBall || _ballObject == null)
-        {
-            return;
-        }
-
-        _ballObject.GetComponent<Rigidbody2D>().velocity = transform.up * (KickSpeed + _moveDirection.magnitude);
-        _ballObject.GetComponent<Collider2D>().enabled = true;
-        _ballObject.transform.parent = null;
-        _ballObject = null;
-
-        _hasBall = false;
+        Move();
     }
 
     private void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.tag.Equals("Ball"))
-        {
-            _hasBall = true;
-            _ballObject = col.gameObject;
-            _ballObject.transform.parent = transform;
-            _ballObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-            _ballObject.GetComponent<Collider2D>().enabled = false;
-            _ballObject.transform.localPosition = new Vector3(0, 1.5f);
-        }
+        Debug.Log(string.Format("Player collision enter with {0}", col.gameObject.tag));
+    }
+
+    private void OnCollisionExit2D(Collision2D col)
+    {
+        Debug.Log(string.Format("Player collision exit with {0}", col.gameObject.tag));
     }
 
     private void OnTriggerEnter2D(Collider2D col)
     {  
-        if (col.tag.Equals("Portal"))
+        if (col.CompareTag("Portal"))
         {
             var portal = col.gameObject.GetComponent<Portal>();
             if (!portal.Delay)
@@ -86,13 +60,73 @@ public class Player : MonoBehaviour
                 portal.Delay = true;
             }
         }
+        else if (col.CompareTag("Ball"))
+        {
+            _ball = col.GetComponentInParent<Ball>();
+            _ball.PlayerCollision(BallPosition);
+            _hasBall = true;
+        }
     }
 
     private void OnTriggerExit2D(Collider2D col)
     {
-        if (col.tag.Equals("Portal"))
+        if (col.CompareTag("Portal"))
         {
             col.gameObject.GetComponent<Portal>().Delay = false;
+        }
+        else if (col.CompareTag("Ball"))
+        {
+            _hasBall = false;
+            _ball = null;
+        }
+    }
+
+    private void Move()
+    {
+        if (Math.Abs(_inputX) < 0.1f && Math.Abs(_inputY) < 0.1f)
+        {
+            _currentMoveSpeed = 0f;
+            return;
+        }
+
+        var movement = new Vector2(_inputX, _inputY);
+        if (movement.magnitude > 1)
+        {
+            movement = movement.normalized;
+        }
+
+        movement *= MoveSpeed;
+
+        _currentMoveSpeed = movement.magnitude;
+
+        movement *= Time.deltaTime;
+
+        transform.Translate(movement, Space.World);
+        
+        var angle = Mathf.Atan2(movement.x, movement.y) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle, Vector3.back), TurnSpeed);
+    }
+
+    private void ShootBall()
+    {
+        if (!_hasBall)
+        {
+            return;
+        }
+
+        if (Input.GetButtonDown("Fire2"))
+        {
+            _currentShootForce = ShootMinForce;
+        }
+        else if (Input.GetButtonUp("Fire2"))
+        {
+            Debug.Log(string.Format("Current Force: {0} CurrentSpeed: {1}", _currentShootForce, _currentMoveSpeed));
+            _ball.Shoot(_currentShootForce + _currentMoveSpeed, transform.up);
+        }
+        else if (Input.GetButton("Fire2"))
+        {
+            var tempForce = _currentShootForce + _shootChargeSpeed * Time.deltaTime;
+            _currentShootForce = tempForce < ShootMaxForce ? tempForce : ShootMaxForce;
         }
     }
 }

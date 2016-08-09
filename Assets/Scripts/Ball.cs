@@ -3,17 +3,25 @@ using System.Collections;
 
 public class Ball : MonoBehaviour
 {
-    private Rigidbody2D _rigidBody2D;
+    private Rigidbody2D _rigidbody2D;
 
-	// Use this for initialization
-	void Start () 
-	{
-        _rigidBody2D = GetComponent<Rigidbody2D>();
+    public void PlayerCollision(Transform ballPosition)
+    {
+        _rigidbody2D.isKinematic = true;
+        _rigidbody2D.velocity = Vector2.zero;
+        transform.parent = ballPosition;
+        transform.localPosition = ballPosition.localPosition;
     }
-	
-	// Update is called once per frame
-	void Update () 
-	{
-	
-	}
+
+    public void Shoot(float force, Vector3 direction)
+    {
+        _rigidbody2D.isKinematic = false;
+        _rigidbody2D.velocity = direction * force;
+        transform.parent = null;
+    }
+
+    private void Start ()
+    {
+        _rigidbody2D = this.GetComponentSafe<Rigidbody2D>();
+    }
 }

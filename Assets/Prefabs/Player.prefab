@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 406490}
   - 212: {fileID: 21245310}
   m_Layer: 10
-  m_Name: player
+  m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24,8 +24,11 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 493580}
-  - 114: {fileID: 11468912}
   - 60: {fileID: 60000011232847368}
+  - 50: {fileID: 50000011059183994}
+  - 114: {fileID: 114000012223996714}
+  - 114: {fileID: 114000012697606952}
+  - 114: {fileID: 114000013649412668}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -61,25 +64,6 @@ Transform:
   - {fileID: 406490}
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!114 &11468912
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 138320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ffd8de655f8ab94688c1382c6b6ec79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MoveSpeed: 20
-  TurnSpeed: 0.25
-  SprintSpeed: 40
-  SprintStamina: 1
-  ShootMinForce: 5
-  ShootMaxForce: 50
-  ShootChargeTime: 0.75
-  BallPosition: {fileID: 4000014165473396}
 --- !u!212 &21245310
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -152,6 +136,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 493580}
   m_RootOrder: 0
+--- !u!50 &50000011059183994
+Rigidbody2D:
+  serializedVersion: 2
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 138320}
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!60 &60000011232847368
 PolygonCollider2D:
   m_ObjectHideFlags: 1
@@ -169,3 +170,75 @@ PolygonCollider2D:
     - - {x: 0.02395153, y: 1.263462}
       - {x: 2.2204638, y: -1.2238507}
       - {x: -2.0767574, y: -1.2478015}
+--- !u!114 &114000012223996714
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 138320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 72
+    i1: 20
+    i2: 145
+    i3: 128
+    i4: 11
+    i5: 202
+    i6: 75
+    i7: 84
+    i8: 9
+    i9: 58
+    i10: 111
+    i11: 118
+    i12: 36
+    i13: 40
+    i14: 165
+    i15: 63
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
+--- !u!114 &114000012697606952
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 138320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.07692308
+  m_SyncRotationAxis: 3
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 1000
+  m_InterpolateRotation: 20
+  m_InterpolateMovement: 1
+--- !u!114 &114000013649412668
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 138320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ffd8de655f8ab94688c1382c6b6ec79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MoveSpeed: 20
+  TurnSpeed: 0.25
+  SprintSpeed: 40
+  SprintStamina: 1
+  ShootMinForce: 5
+  ShootMaxForce: 50
+  ShootChargeTime: 0.75
+  BallPosition: {fileID: 4000014165473396}
+  Color: {r: 0, g: 0, b: 0, a: 0}

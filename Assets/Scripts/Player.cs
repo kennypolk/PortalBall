@@ -1,7 +1,8 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Player : MonoBehaviour
+public class Player : NetworkBehaviour
 {
     public float MoveSpeed = 20f;
     public float TurnSpeed = 0.25f;
@@ -12,6 +13,9 @@ public class Player : MonoBehaviour
     public float ShootChargeTime = 0.75f;
     public Transform BallPosition;
 
+    [SyncVar]
+    public Color Color;
+
     private float _inputX;
     private float _inputY;
     private float _currentMoveSpeed;
@@ -20,24 +24,73 @@ public class Player : MonoBehaviour
     private float _currentShootForce;
     private Ball _ball;
     private bool _hasBall;
+    private Collider2D _collider2D;
+
+    //hard to control WHEN Init is called (networking make order between object spawning non deterministic)
+    //so we call init from multiple location (depending on what between spaceship & manager is created first).
+    protected bool WasInit = false;
+
+    public void Init()
+    {
+        if (WasInit)
+        {
+            return;
+        }
+
+        WasInit = true;
+    }
+
+    private void Awake()
+    {
+        GameManager.Players.Add(this);
+    }
 
     private void Start ()
     {
         _shootChargeSpeed = (ShootMaxForce - ShootMinForce)/ShootChargeTime;
+
+        var renderers = GetComponentsInChildren<Renderer>();
+        foreach (var renderer in renderers)
+        {
+            renderer.material.color = Color;
+        }
+
+        //We don't want to handle collision on client, so disable collider there
+        //_collider2D = this.GetComponentSafe<Collider2D>();
+        //_collider2D.enabled = isServer;
+
+        //we MAY be awake late (see comment on _wasInit above), so if the instance is already there we init
+        if (GameManager.Instance != null)
+        {
+            Init();
+        }
     }
-    
+
+    [ClientCallback]
     private void Update ()
     {
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+
         _inputX = Input.GetAxis("Horizontal");
         _inputY = Input.GetAxis("Vertical");
 
-        ShootBall();
+        //ShootBall();
     }
+    [ClientCallback]
 
     private void FixedUpdate()
     {
+        if (!hasAuthority)
+        {
+            return;
+        }
+
         Move();
     }
+
 
     private void OnCollisionEnter2D(Collision2D col)
     {
@@ -49,15 +102,27 @@ public class Player : MonoBehaviour
         Debug.Log(string.Format("Player collision exit with {0}", col.gameObject.tag));
     }
 
+    [ClientCallback]
     private void OnTriggerEnter2D(Collider2D col)
-    {  
+    {
+        Debug.Log("Trigger Enter");
+        if (!hasAuthority)
+        {
+            Debug.Log("I'm a server");
+            return;
+        }
+
         if (col.CompareTag("Portal"))
         {
-            var portal = col.gameObject.GetComponent<Portal>();
+            Debug.Log("Portal Enter");
+            var portal = col.gameObject.GetComponentSafe<Portal>();
             if (!portal.Delay)
             {
-                col.gameObject.GetComponent<Portal>().Port(gameObject);
-                portal.Delay = true;
+                portal.LinkedPortal.Delay = true;
+                transform.position = portal.LinkedPortal.transform.position;
+                //portal.Delay = true;
+                //col.gameObject.GetComponent<Portal>().Port(gameObject);
+
             }
         }
         else if (col.CompareTag("Ball"))
@@ -72,7 +137,7 @@ public class Player : MonoBehaviour
     {
         if (col.CompareTag("Portal"))
         {
-            col.gameObject.GetComponent<Portal>().Delay = false;
+            col.gameObject.GetComponentSafe<Portal>().Delay = false;
         }
         else if (col.CompareTag("Ball"))
         {

@@ -25,6 +25,7 @@ public class Player : NetworkBehaviour
     private Ball _ball;
     private bool _hasBall;
     private Collider2D _collider2D;
+    private NetworkIdentity _networkIdentity;
 
     //hard to control WHEN Init is called (networking make order between object spawning non deterministic)
     //so we call init from multiple location (depending on what between spaceship & manager is created first).
@@ -58,6 +59,7 @@ public class Player : NetworkBehaviour
         //We don't want to handle collision on client, so disable collider there
         //_collider2D = this.GetComponentSafe<Collider2D>();
         //_collider2D.enabled = isServer;
+        _networkIdentity = this.GetComponentSafe<NetworkIdentity>();
 
         //we MAY be awake late (see comment on _wasInit above), so if the instance is already there we init
         if (GameManager.Instance != null)
@@ -79,8 +81,8 @@ public class Player : NetworkBehaviour
 
         //ShootBall();
     }
-    [ClientCallback]
 
+    [ClientCallback]
     private void FixedUpdate()
     {
         if (!hasAuthority)
@@ -128,6 +130,7 @@ public class Player : NetworkBehaviour
         else if (col.CompareTag("Ball"))
         {
             _ball = col.GetComponentInParent<Ball>();
+            CmdBallPickUp();
             _ball.PlayerCollision(BallPosition);
             _hasBall = true;
         }
@@ -146,6 +149,7 @@ public class Player : NetworkBehaviour
         }
     }
 
+    [Client]
     private void Move()
     {
         if (Math.Abs(_inputX) < 0.1f && Math.Abs(_inputY) < 0.1f)
@@ -193,5 +197,11 @@ public class Player : NetworkBehaviour
             var tempForce = _currentShootForce + _shootChargeSpeed * Time.deltaTime;
             _currentShootForce = tempForce < ShootMaxForce ? tempForce : ShootMaxForce;
         }
+    }
+
+    [Command]
+    private void CmdBallPickUp()
+    {
+        _ball.AssignAuth(_networkIdentity.connectionToClient);
     }
 }

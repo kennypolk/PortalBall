@@ -7,7 +7,8 @@ public class Player : NetworkBehaviour
     public float MoveSpeed = 20f;
     public float TurnSpeed = 0.25f;
     public float SprintSpeed = 40f;
-    public float SprintStamina = 1f;
+    public float SprintMaxStamina = 20f;
+    public float SprintChargeTime = 0.75f;
     public float ShootMinForce = 5f;
     public float ShootMaxForce = 50f;
     public float ShootChargeTime = 0.75f;
@@ -18,8 +19,10 @@ public class Player : NetworkBehaviour
 
     private float _inputX;
     private float _inputY;
+    private bool _isSprinting;
     private float _currentMoveSpeed;
     private float _currentSprintStamina;
+    private float _sprintChargeSpeed;
     private float _shootChargeSpeed;
     private float _currentShootForce;
     private Ball _ball;
@@ -49,6 +52,8 @@ public class Player : NetworkBehaviour
     private void Start ()
     {
         _shootChargeSpeed = (ShootMaxForce - ShootMinForce)/ShootChargeTime;
+        _sprintChargeSpeed = SprintMaxStamina/SprintChargeTime;
+        _currentSprintStamina = SprintMaxStamina;
 
         var renderers = GetComponentsInChildren<Renderer>();
         foreach (var renderer in renderers)
@@ -78,6 +83,8 @@ public class Player : NetworkBehaviour
 
         _inputX = Input.GetAxis("Horizontal");
         _inputY = Input.GetAxis("Vertical");
+
+        Sprint();
 
         //ShootBall();
     }
@@ -163,7 +170,7 @@ public class Player : NetworkBehaviour
             movement = movement.normalized;
         }
 
-        movement *= MoveSpeed;
+        movement *= _isSprinting ? SprintSpeed : MoveSpeed;
 
         _currentMoveSpeed = movement.magnitude;
 
@@ -196,6 +203,41 @@ public class Player : NetworkBehaviour
             var tempForce = _currentShootForce + _shootChargeSpeed * Time.deltaTime;
             _currentShootForce = tempForce < ShootMaxForce ? tempForce : ShootMaxForce;
         }
+    }
+
+    private void Sprint()
+    {
+        if (Input.GetButtonDown("Fire1"))
+        {
+            if (_currentSprintStamina > 0)
+            {
+                _isSprinting = true;
+            }
+        }
+        else if (Input.GetButtonUp("Fire1"))
+        {
+            _isSprinting = false;
+        }
+        else if (Input.GetButton("Fire1"))
+        {
+            if (_currentSprintStamina > 0)
+            {
+                var tempStamina = _currentSprintStamina - _sprintChargeSpeed*Time.deltaTime;
+                _currentSprintStamina = tempStamina > 0 ? tempStamina : 0;
+            }
+
+            if (Math.Abs(_currentSprintStamina) < 0.1f)
+            {
+                _isSprinting = false;
+            }
+        }
+        else
+        {
+            var tempStamina = _currentSprintStamina + _sprintChargeSpeed*Time.deltaTime;
+            _currentSprintStamina = tempStamina < SprintMaxStamina ? tempStamina : SprintMaxStamina;
+        }
+
+        Debug.Log(string.Format("Stamina: {0}", _currentSprintStamina));
     }
 
     [Command]

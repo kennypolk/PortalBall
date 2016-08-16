@@ -29,6 +29,7 @@ public class Player : NetworkBehaviour
     private bool _hasBall;
     private Collider2D _collider2D;
     private NetworkIdentity _networkIdentity;
+    private Rigidbody2D _rigidbody2D;
 
     //hard to control WHEN Init is called (networking make order between object spawning non deterministic)
     //so we call init from multiple location (depending on what between spaceship & manager is created first).
@@ -65,6 +66,8 @@ public class Player : NetworkBehaviour
         //_collider2D = this.GetComponentSafe<Collider2D>();
         //_collider2D.enabled = isServer;
         _networkIdentity = this.GetComponentSafe<NetworkIdentity>();
+
+        _rigidbody2D = this.GetComponentSafe<Rigidbody2D>();
 
         //we MAY be awake late (see comment on _wasInit above), so if the instance is already there we init
         if (GameManager.Instance != null)
@@ -129,9 +132,6 @@ public class Player : NetworkBehaviour
             {
                 portal.LinkedPortal.Delay = true;
                 transform.position = portal.LinkedPortal.transform.position;
-                //portal.Delay = true;
-                //col.gameObject.GetComponent<Portal>().Port(gameObject);
-
             }
         }
         else if (col.CompareTag("Ball"))
@@ -196,7 +196,7 @@ public class Player : NetworkBehaviour
         else if (Input.GetButtonUp("Fire2"))
         {
             Debug.Log(string.Format("Current Force: {0} CurrentSpeed: {1}", _currentShootForce, _currentMoveSpeed));
-            _ball.Shoot(_currentShootForce + _currentMoveSpeed, transform.up);
+            CmdShoot();
         }
         else if (Input.GetButton("Fire2"))
         {
@@ -243,6 +243,47 @@ public class Player : NetworkBehaviour
     [Command]
     private void CmdBallPickUp()
     {
-        _ball.PlayerCollision(BallPosition);
+        var networkIdentity = _ball.GetComponentSafe<NetworkIdentity>();
+        networkIdentity.AssignClientAuthority(connectionToClient);
+        //_ball.PlayerCollision(BallPosition);
+        //_ball.Rigidbody2D.isKinematic = true;
+        //_ball.Rigidbody2D.velocity = Vector2.zero;
+        ////transform.parent = ballPosition;
+        ////transform.localPosition = ballPosition.localPosition;
+        //_ball.Rigidbody2D.MovePosition(BallPosition.position);
+        //_ball.Rigidbody2D.MoveRotation(0f);
+        //_ball.transform.parent = BallPosition;
+
+        RpcBallPickUp();
+        //BallPickUp();
+    }
+
+    [ClientRpc]
+    private void RpcBallPickUp()
+    {
+        _ball.transform.parent = BallPosition;
+        _ball.Rigidbody2D.velocity = Vector2.zero;
+        //transform.parent = ballPosition;
+        //transform.localPosition = ballPosition.localPosition;
+        _ball.Rigidbody2D.MovePosition(BallPosition.localPosition);
+        _ball.Rigidbody2D.MoveRotation(0f);
+        _ball.Rigidbody2D.isKinematic = true;
+    }
+
+    private void BallPickUp()
+    {
+        _ball.transform.parent = BallPosition;
+        _ball.Rigidbody2D.velocity = Vector2.zero;
+        //transform.parent = ballPosition;
+        //transform.localPosition = ballPosition.localPosition;
+        _ball.Rigidbody2D.MovePosition(BallPosition.localPosition);
+        _ball.Rigidbody2D.MoveRotation(0f);
+        _ball.Rigidbody2D.isKinematic = true;
+    }
+
+    [Command]
+    private void CmdShoot()
+    {
+        _ball.Shoot(_currentShootForce + _currentMoveSpeed, transform.up);
     }
 }

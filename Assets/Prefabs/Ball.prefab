@@ -87,7 +87,7 @@ CircleCollider2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 194070}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 6200000, guid: 48ff2f13077a8f94aab08b641aa0171c, type: 2}
   m_IsTrigger: 0
@@ -106,6 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76f34f831e25d5647b6f8a84b76461ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Rigidbody2D: {fileID: 0}
 --- !u!212 &21253788
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -223,8 +224,8 @@ MonoBehaviour:
     i13: 75
     i14: 237
     i15: 104
-  m_ServerOnly: 1
-  m_LocalPlayerAuthority: 0
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114000013213948348
 MonoBehaviour:
   m_ObjectHideFlags: 1

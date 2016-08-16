@@ -213,14 +213,14 @@ MonoBehaviour:
   m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TransformSyncMode: 1
-  m_SendInterval: 0.07692308
+  m_TransformSyncMode: 2
+  m_SendInterval: 0.1
   m_SyncRotationAxis: 3
   m_RotationSyncCompression: 0
   m_SyncSpin: 0
   m_MovementTheshold: 0.001
-  m_SnapThreshold: 1000
-  m_InterpolateRotation: 20
+  m_SnapThreshold: 25
+  m_InterpolateRotation: 1
   m_InterpolateMovement: 1
 --- !u!114 &114000013649412668
 MonoBehaviour:
@@ -235,8 +235,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 30
   TurnSpeed: 0.25
-  SprintSpeed: 40
-  SprintStamina: 1
+  SprintSpeed: 50
+  SprintMaxStamina: 20
+  SprintChargeTime: 0.75
   ShootMinForce: 5
   ShootMaxForce: 50
   ShootChargeTime: 0.75

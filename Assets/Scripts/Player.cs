@@ -131,7 +131,6 @@ public class Player : NetworkBehaviour
         {
             _ball = col.GetComponentInParent<Ball>();
             CmdBallPickUp();
-            _ball.PlayerCollision(BallPosition);
             _hasBall = true;
         }
     }
@@ -202,6 +201,6 @@ public class Player : NetworkBehaviour
     [Command]
     private void CmdBallPickUp()
     {
-        _ball.AssignAuth(_networkIdentity.connectionToClient);
+        _ball.PlayerCollision(BallPosition);
     }
 }

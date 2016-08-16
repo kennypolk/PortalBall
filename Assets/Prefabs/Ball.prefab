@@ -159,7 +159,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000011236496840}
   - 58: {fileID: 58000014293437516}
-  - 50: {fileID: 50000013379423228}
   m_Layer: 8
   m_Name: Trigger Collider
   m_TagString: Ball
@@ -180,23 +179,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 421778}
   m_RootOrder: 1
---- !u!50 &50000013379423228
-Rigidbody2D:
-  serializedVersion: 2
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000011727183054}
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!58 &58000014293437516
 CircleCollider2D:
   m_ObjectHideFlags: 1
@@ -241,8 +223,8 @@ MonoBehaviour:
     i13: 75
     i14: 237
     i15: 104
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
+  m_ServerOnly: 1
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114000013213948348
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.Networking;
 
 public class Ball : NetworkBehaviour
 {
     private Rigidbody2D _rigidbody2D;
-    private NetworkIdentity _networkIdentity;
 
     public void PlayerCollision(Transform ballPosition)
     {
@@ -14,13 +12,8 @@ public class Ball : NetworkBehaviour
         //transform.parent = ballPosition;
         //transform.localPosition = ballPosition.localPosition;
         _rigidbody2D.MovePosition(ballPosition.position);
+        _rigidbody2D.MoveRotation(0f);
         transform.parent = ballPosition;
-    }
-
-    [Server]
-    public void AssignAuth(NetworkConnection conn)
-    {
-        _networkIdentity.AssignClientAuthority(conn);
     }
 
     public void Shoot(float force, Vector3 direction)
@@ -33,6 +26,5 @@ public class Ball : NetworkBehaviour
     private void Start ()
     {
         _rigidbody2D = this.GetComponentSafe<Rigidbody2D>();
-        _networkIdentity = this.GetComponentSafe<NetworkIdentity>();
     }
 }
